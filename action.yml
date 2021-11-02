@@ -5,15 +5,15 @@ inputs:
   repo:
     description: '対象リポジトリ名(owner/repo)'
     required: true
-    default: ''
+    default: ${{ github.repository }}
   token:
     description: 'リポジトリトークン'
     required: true
-    default: ''
+    default: ${{ secrets.GITHUB_TOKEN }}
   current_branch:
     description: 'マージされたリリースブランチ名'
     required: true
-    default: ''
+    default: ${{ steps.extract_branch.outputs.branch }}
   release_branch_regexp:
     description: 'リリースブランチを判定する正規表現'
     required: true
