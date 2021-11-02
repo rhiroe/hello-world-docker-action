@@ -1,29 +1,23 @@
 require 'octokit'
 
-github_token, repo, release_branch_regexp, title, body = ARGV
+github_token, repo, current_branch, release_branch_regexp, title, body = ARGV
+
+# テスト
+puts current_branch
 
 client = Octokit::Client.new(access_token: github_token)
+
 all_branches = []
 loop.with_index(1) do |_, page|
-  branches = client.branches(repo, per_page: 100, page: page)
+  branches = client.branches(repo, per_page: 100, page: page).map(&:name)
   break if branches.size == 0
 
   all_branches += branches
 end
 
-release_branches = all_branches.select { |b| b.name.match?(release_branch_regexp) }.map(&:name)
-default_branch = client.repo(repo).default_branch
-release_branches << default_branch
+release_branches = all_branches.select { |branch_name| branch_name.match?(release_branch_regexp) }
 
-release_branches.each_cons(2) do |from_branch, to_branch|
-  retry_counter = 0
-  begin
-    sleep 3
-    client.create_pull_request(repo, to_branch, from_branch, title, body)
-  rescue Octokit::BadGateway, Faraday::ConnectionFailed
-    retry_counter += 1
-    retry if retry_counter < 3
-  rescue Octokit::UnprocessableEntity => e
-    puts e.message
-  end
+if release_branches.include? current_branch
+  to_branch = release_branches.find { |b| b > current_branch } || client.repo(repo).default_branch
+  client.create_pull_request(repo, to_branch, current_branch, title, body)
 end

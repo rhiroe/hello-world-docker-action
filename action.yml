@@ -10,6 +10,10 @@ inputs:
     description: 'リポジトリトークン'
     required: true
     default: ''
+  current_branch:
+    description: 'マージされたリリースブランチ名'
+    required: true
+    default: ''
   release_branch_regexp:
     description: 'リリースブランチを判定する正規表現'
     required: true
@@ -28,6 +32,7 @@ runs:
   args:
     - ${{ inputs.repo }}
     - ${{ inputs.token }}
+    - ${{ inputs.current_branch }}
     - ${{ inputs.release_branch_regexp }}
     - ${{ inputs.pr_title }}
     - ${{ inputs.pr_body }}
