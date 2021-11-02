@@ -6,15 +6,12 @@
 
 ## `repo`
 **Required** リポジトリ名。  
-デフォルトはアクションを実行したリポジトリ。
 
 ## `token`
 **Required** トークン。  
-デフォルトはアクションを実行したリポジトリで取得したトークン。
 
 ## `current_branch`
 **Required** マージされたリリースブランチ。  
-デフォルトはアクションが実行されたブランチ。
 
 ## `release_branch_regexp`
 **Required** リリースブランチ検索用正規表現。  
@@ -29,11 +26,11 @@
 
 ## 使用例
 
-```yml
+```.github/workflows/main.yml
 on:
   pull_request:
     branches:
-      - '^release-\d+\.\d+\.\d+\.\d+$'
+      - 'release-**'
     types: [closed]
 
 jobs:
@@ -50,6 +47,9 @@ jobs:
         id: pullreq_police
         uses: rhiroe/pullreq_police@v1
         with:
+          repo: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          current_branch: ${{ steps.extract_branch.outputs.branch }}
           release_branch_regexp: '^release-\d+\.\d+\.\d+\.\d+$'
           pr_title: 'リリースブランチの変更を検知しました'
           pr_body: '速やかにマージしてください。'
