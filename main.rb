@@ -18,6 +18,6 @@ end
 release_branches = all_branches.select { |branch_name| branch_name.match?(release_branch_regexp) }
 
 if release_branches.include? current_branch
-  to_branch = release_branches.find { |b| b > current_branch } || client.repo(repo).default_branch
+  to_branch = release_branches.select(&current_branch.method(:<)).min || client.repo(repo).default_branch
   client.create_pull_request(repo, to_branch, current_branch, title, body)
 end
