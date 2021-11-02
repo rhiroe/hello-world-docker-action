@@ -9,4 +9,4 @@ COPY main.rb /pullreq_police/main.rb
 COPY entrypoint.sh /pullreq_police/entrypoint.sh
 
 # dockerコンテナが起動する際に実行されるコードファイル (`entrypoint.sh`)
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/pullreq_police/entrypoint.sh"]
