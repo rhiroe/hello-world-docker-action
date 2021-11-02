@@ -1,16 +1,33 @@
 # action.yml
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Pullreq Police'
+description: 'リリースブランチに変更があった場合に開発ブランチまで変更を反映させます。'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  repo:
+    description: '対象リポジトリ名(owner/repo)'
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+    default: ''
+  token:
+    description: 'リポジトリトークン'
+    required: true
+    default: ''
+  release_branch_regexp:
+    description: 'リリースブランチを判定する正規表現'
+    required: true
+    default: '^release-\d+\.\d+\.\d+\.\d+$'
+  pr_title:
+    description: '作成するプルリクのタイトル'
+    required: true
+    default: 'リリースブランチの変更を検知しました'
+  pr_body:
+    description: '作成するプルリクの本文'
+    required: true
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.who-to-greet }}
+    - ${{ inputs.repo }}
+    - ${{ inputs.token }}
+    - ${{ inputs.release_branch_regexp }}
+    - ${{ inputs.pr_title }}
+    - ${{ inputs.pr_body }}

@@ -1,5 +1,4 @@
 #!/bin/sh -l
 
-echo "Hello $1"
-time=$(date)
-echo "::set-output name=time::$time"
+bundle install
+bundle exec ruby main.rb $INPUT_TOKEN $INPUT_REPO $INPUT_RELEASE_BRANCH_REGEXP $INPUT_PR_TITLE $INPUT_PR_BODY
